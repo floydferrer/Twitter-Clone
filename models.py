@@ -84,10 +84,12 @@ class User(db.Model):
 
     bio = db.Column(
         db.Text,
+        default='No bio available'
     )
 
     location = db.Column(
         db.Text,
+        default='Earth, Milky Way'
     )
 
     password = db.Column(
