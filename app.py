@@ -53,7 +53,8 @@ def do_logout():
 
     if CURR_USER_KEY in session:
         del session[CURR_USER_KEY]
-
+        flash('Successfully logged out!', 'success')
+    return render_template('/users/login.html')
 
 @app.route('/signup', methods=["GET", "POST"])
 def signup():
