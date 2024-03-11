@@ -158,7 +158,7 @@ nav + .container {
   margin-top: 100px;
 }
 
-#profile-image,
+
 #profile-avatar {
   border-radius: 100%;
   display: block;
@@ -166,8 +166,8 @@ nav + .container {
 }
 
 #profile-image {
-  margin: 0 auto 15px;
   width: 100%;
+  height: 100%
 }
 
 #profile-avatar {
