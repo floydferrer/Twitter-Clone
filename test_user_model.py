@@ -56,3 +56,95 @@ class UserModelTestCase(TestCase):
         # User should have no messages & no followers
         self.assertEqual(len(u.messages), 0)
         self.assertEqual(len(u.followers), 0)
+    
+    def test_is_following(self):
+        """Are followers tracked?"""
+
+        u = User(
+            email="test@test.com",
+            username="testuser",
+            password="HASHED_PASSWORD"
+        )
+
+        db.session.add(u)
+        db.session.commit()
+
+        u2 = User(
+            email="test2@test2.com",
+            username="testuser2",
+            password="HASHED_PASSWORD",
+            following=[u]
+        )
+        
+        u3 = User(
+            email="test3@test3.com",
+            username="testuser3",
+            password="HASHED_PASSWORD"
+        )
+
+        db.session.add_all([u2, u3])
+        db.session.commit()
+
+        self.assertEqual(u2.is_following(u), 1)
+        self.assertNotEqual(u2.is_following(u3), 1)
+    
+    def test_is_followed_by(self):
+        """Are followed by users tracked"""
+
+        u = User(
+            email="test@test.com",
+            username="testuser",
+            password="HASHED_PASSWORD"
+        )
+
+        db.session.add(u)
+        db.session.commit()
+
+        u2 = User(
+            email="test2@test2.com",
+            username="testuser2",
+            password="HASHED_PASSWORD",
+            followers=[u]
+        )
+        
+        u3 = User(
+            email="test3@test3.com",
+            username="testuser3",
+            password="HASHED_PASSWORD"
+        )
+
+        db.session.add_all([u2, u3])
+        db.session.commit()
+
+   
+        self.assertEqual(u2.is_followed_by(u), 1)
+        self.assertNotEqual(u2.is_followed_by(u3), 1)
+
+    def test_user_authentication(self):
+        """Does user authentication work?"""
+
+        u = User.signup(
+            email="test@test.com",
+            username="testuser",
+            password="HASHED_PASSWORD",
+            image_url='test.com',
+            bio='test',
+            location='test'
+        )
+
+        db.session.add(u)
+        db.session.commit()
+
+        user = User.authenticate('testuser',
+                                 'HASHED_PASSWORD')
+
+        user2 = User.authenticate('testusere',
+                                 'HASHED_PASSWORD')
+
+        user3 = User.authenticate('testuser',
+                                 'HASHED_PASSWORDe')
+
+        # User should have no messages & no followers
+        self.assertEqual(u, user)
+        self.assertNotEqual(u, user2)
+        self.assertNotEqual(u, user3)
